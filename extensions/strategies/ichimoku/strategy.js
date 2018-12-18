@@ -47,7 +47,7 @@ module.exports = {
         s.trend = 'up'
         s.signal = !s.acted_on_trend ? 'buy' : null
       }
-      if (s.period.close < Math.max(s.period.senkou_a, s.period.senkou_b)) {
+      if (s.period.close < Math.min(s.period.senkou_a, s.period.senkou_b)) {
         if (s.trend !== 'down') {
           s.acted_on_trend = false
         }
