@@ -17,10 +17,13 @@ module.exports =  {
   calculate: function (s) {
     if (s.lookback.length >= s.options.min_periods) {
       if (!s.trend) {
+        console.log(s)
         if (s.period.high > s.lookback[s.lookback.length - 1].high) {
           // start with uptrend
           s.trend = 'up'
-          s.sar = Math.min(s.lookback[1].low, s.lookback[0].low)
+          if((s.lookback.length) > 1)
+            s.sar = Math.min(s.lookback[1].low, s.lookback[0].low)
+          else s.sar = s.lookback[0].low
           s.sar_ep = s.period.high
           s.sar_af = s.options.sar_af
           for (var idx = 0; idx < s.lookback.length; idx++) {
@@ -29,7 +32,9 @@ module.exports =  {
         }
         else {
           s.trend = 'down'
-          s.sar = Math.max(s.lookback[1].high, s.lookback[0].high)
+          if((s.lookback.length) > 1)
+            s.sar = Math.max(s.lookback[1].high, s.lookback[0].high)
+          else s.sar = s.lookback[0].high
           s.sar_ep = s.period.low
           s.sar_af = s.options.sar_af
           for (idx = 0; idx < s.lookback.length; idx++) {
@@ -41,12 +46,19 @@ module.exports =  {
   },
 
   onPeriod: function (s, cb) {
+    console.log('>>> LOOKBACK `'+s.lookback.length) 
     if (typeof s.sar === 'number') {
       if (s.trend === 'up') {
-        s.sar = Math.min(s.lookback[1].low, s.lookback[0].low, s.sar + (s.sar_af * (s.sar_ep - s.sar)))
+        if((s.lookback.length) > 1)
+          s.sar = Math.min(s.lookback[1].low, s.lookback[0].low, s.sar + (s.sar_af * (s.sar_ep - s.sar)))
+        else
+          s.sar = Math.min(s.lookback[0].low, s.sar + (s.sar_af * (s.sar_ep - s.sar)))
       }
       else {
-        s.sar = Math.max(s.lookback[1].high, s.lookback[0].high, s.sar - (s.sar_af * (s.sar - s.sar_ep)))
+        if((s.lookback.length) > 1)
+          s.sar = Math.max(s.lookback[1].high, s.lookback[0].high, s.sar - (s.sar_af * (s.sar - s.sar_ep)))
+        else
+          s.sar = Math.max(s.lookback[0].high, s.sar - (s.sar_af * (s.sar - s.sar_ep)))
       }
       if (s.trend === 'down') {
         if (s.period.high >= s.sar && s.period.close > s.lookback[0].close) {
