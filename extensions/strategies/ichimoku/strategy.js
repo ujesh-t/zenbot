@@ -9,8 +9,8 @@ module.exports = {
   description: 'Ichimoku Cloud',
 
   getOptions: function () {
-    this.option('period', 'period length, same as --period_length', String, '4h')
-    this.option('period_length', 'period length', String, '4h')
+    this.option('period', 'period length, same as --period_length', String, '15m')
+    this.option('period_length', 'period length', String, '15m')
     this.option('min_periods', 'min periods (should be >= senkou_b option)', Number, 52)
     this.option('tenkan', 'Tenkan (conversion) line', Number, 9)
     this.option('kijun','Kijun (base) line', Number, 26)
