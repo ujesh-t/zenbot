@@ -44,7 +44,7 @@ module.exports = {
       let lowerBound = Math.min(s.period.senkou_a, s.period.senkou_b)
 
 
-      if (s.period.close > upperBound && s.period.tenkan > s.period.kijun) {
+      if (s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
         if (s.trend !== 'up') {
           s.acted_on_trend = false
         }
