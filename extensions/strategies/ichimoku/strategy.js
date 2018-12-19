@@ -23,6 +23,7 @@ module.exports = {
 
   onPeriod: function (s, cb) {
     if (s.lookback[s.options.min_periods]) {
+      
       highest(s, 'tenkan_high', s.options.tenkan)
       lowest(s, 'tenkan_low', s.options.tenkan)
       highest(s, 'kijun_high', s.options.kijun)
@@ -35,6 +36,12 @@ module.exports = {
       s.period.senkou_a = ((s.period.tenkan + s.period.kijun) / 2)
       s.period.senkou_b = ((s.period.senkou_high + s.period.senkou_low) / 2)
       s.period.chikou = s.lookback[s.options.chikou - 1].close
+      
+      let currentSenkouA = s.lookback[s.options.chikou].senkou_a
+      let currentSenkouB = s.lookback[s.options.chikou].senkou_b
+      
+      let upperBound = Math.max(s.period.senkou_a, s.period.senkou_b)
+      let lowerBound = Math.min(s.period.senkou_a, s.period.senkou_b)
 
       // The below lines cause the bot to buy when the price is above the kumo cloud and sell when the price is inside
       // or below the kumo cloud. There are many different ways to trade the Ichimoku Cloud and all of them can be
@@ -47,6 +54,7 @@ module.exports = {
         s.trend = 'up'
         s.signal = !s.acted_on_trend ? 'buy' : null
       }
+      
       if (s.period.close < Math.min(s.period.senkou_a, s.period.senkou_b)) {
         if (s.trend !== 'down') {
           s.acted_on_trend = false
@@ -61,8 +69,12 @@ module.exports = {
   onReport: function (s) {
     var cols = []
     if(s.period.senkou_a && s.period.senkou_b){
-        let upperBound = Math.max(s.period.senkou_a, s.period.senkou_b)
-        let lowerBound = Math.min(s.period.senkou_a, s.period.senkou_b)
+      
+        let currentSenkouA = s.lookback[s.options.chikou].senkou_a
+        let currentSenkouB = s.lookback[s.options.chikou].senkou_b
+       
+        let upperBound = Math.max(currentSenkouA, currentSenkouB)
+        let lowerBound = Math.min(currentSenkouA, currentSenkouB)
       
         var color = 'grey'
         if (s.period.close > upperBound) {
