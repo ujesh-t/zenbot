@@ -94,8 +94,15 @@ module.exports = {
           color = 'red'
         }
         cols.push(z(8, n(s.period.close).format('0.00000000'), ' ')[color])
-        cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
-        cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
+        if(s.trend === 'down') {
+           cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').red)
+           cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
+        }
+        if(s.trend === 'up'){
+           cols.push(z(8, n(s.period.tenkan).format('0.00000000').substring(0,10), ' ').green)
+           cols.push(z(8, n(s.period.kijun).format('0.00000000').substring(0,10), ' ').green)
+        }
+        
     }
     
     return cols
