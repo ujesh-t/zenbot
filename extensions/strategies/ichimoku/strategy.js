@@ -60,6 +60,22 @@ module.exports = {
 
   onReport: function (s) {
     var cols = []
+    if(s.period.senkou_a && s.period.senkou_b){
+        let upperBound = Math.max(s.period.senkou_a, s.period.senkou_b)
+        let lowerBound = Math.min(s.period.senkou_a, s.period.senkou_b)
+      
+        var color = 'grey'
+        if (s.period.close > upperBound) {
+          color = 'green'
+        }
+        if (s.period.close < lowerBound) {
+          color = 'red'
+        }
+        cols.push(z(8, n(s.period.close).format('0.00000000'), ' ')[color])
+        cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
+        cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
+    }
+    
     return cols
   },
 
