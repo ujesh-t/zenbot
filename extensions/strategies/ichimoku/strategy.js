@@ -43,11 +43,8 @@ module.exports = {
       let upperBound = Math.max(s.period.senkou_a, s.period.senkou_b)
       let lowerBound = Math.min(s.period.senkou_a, s.period.senkou_b)
 
-      // The below lines cause the bot to buy when the price is above the kumo cloud and sell when the price is inside
-      // or below the kumo cloud. There are many different ways to trade the Ichimoku Cloud and all of them can be
-      // implemented using the indicators above.
 
-      if (s.period.close > Math.max(s.period.senkou_a, s.period.senkou_b)) {
+      if (s.period.close > upperBound && s.period.tenkan > s.period.kijun) {
         if (s.trend !== 'up') {
           s.acted_on_trend = false
         }
@@ -55,6 +52,16 @@ module.exports = {
         s.signal = !s.acted_on_trend ? 'buy' : null
       }
       
+      if(s.period.kijun > s.period.tenkan){
+        if (s.trend !== 'down') {
+          s.acted_on_trend = false
+        }
+        s.trend = 'down'
+        s.signal = !s.acted_on_trend ? 'sell' : null
+      }
+      
+      
+      /*
       if (s.period.close < Math.min(s.period.senkou_a, s.period.senkou_b)) {
         if (s.trend !== 'down') {
           s.acted_on_trend = false
@@ -62,6 +69,9 @@ module.exports = {
         s.trend = 'down'
         s.signal = !s.acted_on_trend ? 'sell' : null
       }
+      */
+      
+      
     }
     cb()
   },
