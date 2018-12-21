@@ -93,7 +93,7 @@ module.exports = {
         if (s.period.close < lowerBound) {
           color = 'red'
         }
-        cols.push(z(8, n(s.period.close).format('0.00000000'), ' ')[color])
+        //cols.push(z(8, n(s.period.close).format('0.00000000'), ' ')[color])
         if(s.trend === 'down') {
            cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').red)
            cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
