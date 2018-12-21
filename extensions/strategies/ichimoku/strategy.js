@@ -40,8 +40,8 @@ module.exports = {
       let currentSenkouA = s.lookback[s.options.chikou].senkou_a
       let currentSenkouB = s.lookback[s.options.chikou].senkou_b
       
-      let upperBound = Math.max(s.period.senkou_a, s.period.senkou_b)
-      let lowerBound = Math.min(s.period.senkou_a, s.period.senkou_b)
+      let upperBound = Math.max(currentSenkouA, currentSenkouB)
+      let lowerBound = Math.min(currentSenkouA, currentSenkouB)
 
 
       if (s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
@@ -96,10 +96,12 @@ module.exports = {
         //cols.push(z(8, n(s.period.close).format('0.00000000'), ' ')[color])
         if(s.trend === 'down') {
            cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').red)
+           cols.push(' ')
            cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
         }
         if(s.trend === 'up'){
            cols.push(z(8, n(s.period.tenkan).format('0.00000000').substring(0,10), ' ').green)
+           cols.push(' ')
            cols.push(z(8, n(s.period.kijun).format('0.00000000').substring(0,10), ' ').green)
         }
         
