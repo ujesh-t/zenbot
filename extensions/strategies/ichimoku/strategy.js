@@ -43,8 +43,8 @@ module.exports = {
       let upperBound = Math.max(currentSenkouA, currentSenkouB)
       let lowerBound = Math.min(currentSenkouA, currentSenkouB)
 
-
-      if (s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
+      // Tenkan is Above Kijun and Kumo Breakouthappens
+      if (s.period.tenkan > s.period.kijun && s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
         if (s.trend !== 'up') {
           s.acted_on_trend = false
         }
