@@ -37,8 +37,8 @@ module.exports = {
       s.period.senkou_b = ((s.period.senkou_high + s.period.senkou_low) / 2)
       s.period.chikou = s.lookback[s.options.chikou - 1].close
       
-      let currentSenkouA = s.lookback[s.options.chikou].senkou_a
-      let currentSenkouB = s.lookback[s.options.chikou].senkou_b
+      let currentSenkouA = s.lookback[s.options.chikou - 1].senkou_a
+      let currentSenkouB = s.lookback[s.options.chikou - 1].senkou_b
       
       let upperBound = Math.max(currentSenkouA, currentSenkouB)
       let lowerBound = Math.min(currentSenkouA, currentSenkouB)
@@ -93,8 +93,8 @@ module.exports = {
     var cols = []
     if(s.period.senkou_a && s.period.senkou_b){
       
-        let currentSenkouA = s.lookback[s.options.chikou].senkou_a
-        let currentSenkouB = s.lookback[s.options.chikou].senkou_b
+        let currentSenkouA = s.lookback[s.options.chikou - 1].senkou_a
+        let currentSenkouB = s.lookback[s.options.chikou - 1].senkou_b
        
         let upperBound = Math.max(currentSenkouA, currentSenkouB)
         let lowerBound = Math.min(currentSenkouA, currentSenkouB)
