@@ -43,6 +43,8 @@ module.exports = {
       let upperBound = Math.max(currentSenkouA, currentSenkouB)
       let lowerBound = Math.min(currentSenkouA, currentSenkouB)
 
+      /*
+      
       // Tenkan is Above Kijun and Kumo Breakout Happens
       if (s.period.tenkan > s.period.kijun && s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
         if (s.trend !== 'up') {
@@ -64,8 +66,19 @@ module.exports = {
         s.trend = 'up'
         s.signal = !s.acted_on_trend ? 'buy' : null
       }
+      */
       
-      if(s.period.kijun > s.period.tenkan){
+      // Kumo Breakout
+      if (s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
+        if (s.trend !== 'up') {
+          s.acted_on_trend = false
+        }
+        s.trend = 'up'
+        s.signal = !s.acted_on_trend ? 'buy' : null
+      }
+      
+      let prevKijunBelowTenkan = (s.lookback[1].kijun <= s.lookback[1].tenkan)
+      if(s.period.kijun > s.period.tenkan && prevKijunBelowTenkan){
         if (s.trend !== 'down') {
           s.acted_on_trend = false
         }
