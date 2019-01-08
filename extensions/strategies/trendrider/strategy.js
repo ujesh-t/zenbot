@@ -49,7 +49,7 @@ var z = require('zero-fill')
 			  cols.push(' ')
 			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
 		  } else {
-			  cols.push('..........')
+			  cols.push('..........'+s.in_preroll)
 		  }
 		  return cols
 	  },
