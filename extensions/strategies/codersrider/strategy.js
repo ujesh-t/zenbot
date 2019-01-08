@@ -1,6 +1,6 @@
 var z = require('zero-fill')
   , n = require('numbro')
-  , bollinger = require('../../../lib/bollinger')
+  , ta_bollinger = require('../../../lib/ta_bollinger')
   , Phenotypes = require('../../../lib/phenotype')
 
 module.exports = {
@@ -8,25 +8,34 @@ module.exports = {
   description: 'Buy when (Signal crossesup Lower Bollinger Band) and sell when (Signal crossesdown Upper Bollinger Band).',
 
   getOptions: function () {
-    this.option('period', 'period length, same as --period_length', String, '1h')
-    this.option('period_length', 'period length, same as --period', String, '1h')
-    this.option('bollinger_size', 'period size', Number, 20)
-    this.option('bollinger_time', 'times of standard deviation between the upper band and the moving averages', Number, 2)
-    this.option('bollinger_upper_bound_pct', 'pct the current price should be near the bollinger upper bound before we sell', Number, 0)
-    this.option('bollinger_lower_bound_pct', 'pct the current price should be near the bollinger lower bound before we buy', Number, 0)
+    this.option('period', 'period length, same as --period_length', String, '15m')
+    this.option('period_length', 'period length, same as --period', String, '15m')
+    
+    this.option('bollinger_size', 'period size', Number, 25)
+    this.option('bollinger_updev', '', Number, 2)
+    this.option('bollinger_dndev', '', Number, 2)
+    this.option('bollinger_dType','mode: : SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3', String, 'EMA')
   },
 
   calculate: function (s) {
     // calculate Bollinger Bands
-    bollinger(s, 'bollinger', s.options.bollinger_size)
+    //ta_bollinger(s, 'tabollinger', s.options.bollinger_size)
   },
 
   onPeriod: function (s, cb) {
-  
-    if (s.period.bollinger) {
-      if (s.period.bollinger.upperBound && s.period.bollinger.lowerBound) {
-        let upperBound = s.period.bollinger.upperBound
-        let lowerBound = s.period.bollinger.lowerBound
+    if (s.in_preroll) return cb()
+    ta_bollinger(s,'tabollinger',s.options.bollinger_size, s.options.bollinger_updev, s.options.bollinger_dndev, s.options.bollinger_dType).
+      then(function(inbol){
+
+        let upperBound = inbol.outRealUpperBand[inbol.outRealUpperBand.length-1] 
+        let lowerBound = inbol.outRealLowerBand[inbol.outRealLowerBand.length-1] 
+        let midBound =inbol.outRealMiddleBand[inbol.outRealMiddleBand.length-1]
+        if (!s.period.bollinger) s.period.bollinger = {}
+
+        s.period.bollinger.upperBound = upperBound
+        s.period.bollinger.lowerBound = lowerBound
+        s.period.bollinger.midBound = midBound
+        
         
         if(s.period.open <= lowerBound && s.period.close >= lowerBound) {
            s.signal = 'buy'
@@ -35,8 +44,6 @@ module.exports = {
         } else {
            s.signal = null //hold
         }
-      
-      }
     }
     cb()
   },
@@ -76,9 +83,10 @@ module.exports = {
     profit_stop_pct: Phenotypes.Range(1,20),
 
     // -- strategy
-    bollinger_size: Phenotypes.Range(1, 40),
-    bollinger_time: Phenotypes.RangeFloat(1,6),
-    bollinger_upper_bound_pct: Phenotypes.RangeFloat(-1, 30),
-    bollinger_lower_bound_pct: Phenotypes.RangeFloat(-1, 30)
+    bollinger_size: Phenotypes.RangeFactor(10, 25, 1),
+    bollinger_updev: Phenotypes.RangeFactor(1, 3.0, 0.1),
+    bollinger_dndev: Phenotypes.RangeFactor(1, 3.0, 0.1),
+    bollinger_dType: Phenotypes.ListOption(['SMA','EMA','WMA','DEMA','TEMA','TRIMA','KAMA','MAMA','T3']),
+    
   }
 }
