@@ -44,8 +44,8 @@ module.exports = {
         } else {
            s.signal = null //hold
         }
-    }
-    cb()
+       cb()
+    })
   },
 
   onReport: function (s) {
