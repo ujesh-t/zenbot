@@ -42,6 +42,7 @@ var z = require('zero-fill')
 	  
 	  onReport: function(s){
 		  var cols = []
+      console.log(s.period)
 		  if(s.period.lower && s.period.upper) {
 			  let lowerBound = s.period.lower
 			  let upperBound = s.period.upper
