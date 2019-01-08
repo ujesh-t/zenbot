@@ -48,27 +48,27 @@ var z = require('zero-fill')
 			  cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
 			  cols.push(' ')
 			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
+		  } else {
+			  cols.push('..........')
 		  }
+		  return cols
 	  },
 	  
 	phenotypes: {
-      // -- common
-      period_length: Phenotypes.RangePeriod(1, 120, 'm'),
-      markdown_buy_pct: Phenotypes.RangeFloat(-1, 5),
-      markup_sell_pct: Phenotypes.RangeFloat(-1, 5),
-      order_type: Phenotypes.ListOption(['maker', 'taker']),
-      sell_stop_pct: Phenotypes.Range0(1, 50),
-      buy_stop_pct: Phenotypes.Range0(1, 50),
-      profit_stop_enable_pct: Phenotypes.Range0(1, 20),
-      profit_stop_pct: Phenotypes.Range(1,20),
-
-       // -- strategy
-      bollinger_period: Phenotypes.RangeFactor(10, 50, 1),
-      standard_deviation: Phenotypes.RangeFactor(1, 3.0, 0.1)
-	  }
+		// -- common
+		period_length: Phenotypes.RangePeriod(1, 120, 'm'),
+		markdown_buy_pct: Phenotypes.RangeFloat(-1, 5),
+		markup_sell_pct: Phenotypes.RangeFloat(-1, 5),
+		order_type: Phenotypes.ListOption(['maker', 'taker']),
+		sell_stop_pct: Phenotypes.Range0(1, 50),
+		buy_stop_pct: Phenotypes.Range0(1, 50),
+		profit_stop_enable_pct: Phenotypes.Range0(1, 20),
+		profit_stop_pct: Phenotypes.Range(1,20),
+		
+		 // -- strategy
+		bollinger_period: Phenotypes.RangeFactor(10, 50, 1),
+		standard_deviation: Phenotypes.RangeFactor(1, 3.0, 0.1)
+	}
 	
   }
-  
-
-
   
