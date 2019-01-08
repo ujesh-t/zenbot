@@ -45,7 +45,7 @@ module.exports = {
            s.signal = null //hold
         }
        cb()
-    })
+    }).catch(function(){ cb() })
   },
 
   onReport: function (s) {
