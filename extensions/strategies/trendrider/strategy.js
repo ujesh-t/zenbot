@@ -5,8 +5,8 @@ var z = require('zero-fill')
   , Phenotypes = require('../../../lib/phenotype')
   
   module.exports = {
-	  name = 'trendrider',
-	  description = 'Bollinger Band Trend Rider.',
+	  name : 'trendrider',
+	  description : 'Bollinger Band Trend Rider.',
 	  
 	  getOptions: function(){
 		  this.option('bollinger_period', 'bollinger period', Number, 25)
@@ -52,19 +52,23 @@ var z = require('zero-fill')
 	  },
 	  
 	phenotypes: {
-		// -- common
-		period_length: Phenotypes.RangePeriod(1, 120, 'm'),
-		markdown_buy_pct: Phenotypes.RangeFloat(-1, 5),
-		markup_sell_pct: Phenotypes.RangeFloat(-1, 5),
-		order_type: Phenotypes.ListOption(['maker', 'taker']),
-		sell_stop_pct: Phenotypes.Range0(1, 50),
-		buy_stop_pct: Phenotypes.Range0(1, 50),
-		profit_stop_enable_pct: Phenotypes.Range0(1, 20),
-		profit_stop_pct: Phenotypes.Range(1,20),
-		
-		 // -- strategy
-		bollinger_period: Phenotypes.RangeFactor(10, 50, 1),
-		standard_deviation: Phenotypes.RangeFactor(1, 3.0, 0.1)
-	 }
+      // -- common
+      period_length: Phenotypes.RangePeriod(1, 120, 'm'),
+      markdown_buy_pct: Phenotypes.RangeFloat(-1, 5),
+      markup_sell_pct: Phenotypes.RangeFloat(-1, 5),
+      order_type: Phenotypes.ListOption(['maker', 'taker']),
+      sell_stop_pct: Phenotypes.Range0(1, 50),
+      buy_stop_pct: Phenotypes.Range0(1, 50),
+      profit_stop_enable_pct: Phenotypes.Range0(1, 20),
+      profit_stop_pct: Phenotypes.Range(1,20),
+
+       // -- strategy
+      bollinger_period: Phenotypes.RangeFactor(10, 50, 1),
+      standard_deviation: Phenotypes.RangeFactor(1, 3.0, 0.1)
+	  }
+	
   }
+  
+
+
   
