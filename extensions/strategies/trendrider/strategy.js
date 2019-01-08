@@ -34,7 +34,7 @@ var z = require('zero-fill')
 				  s.signal = null //hold
 			  }
 			  
-			  cb()
+			  return cb()
 		  }
 		  cb()
 		  
