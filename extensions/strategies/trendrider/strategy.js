@@ -51,7 +51,7 @@ var z = require('zero-fill')
 		  if(s.period.lower && s.period.upper) {
 			  let lowerBound = s.period.lower
 			  let upperBound = s.period.upper
-			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').orange)
+			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').orangered)
 			  cols.push(' ')
         cols.push(z(8, n(s.period.ema).format('0.00000000').substring(0,10), ' ').white)
         cols.push(' ')
