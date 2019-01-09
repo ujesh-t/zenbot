@@ -49,6 +49,8 @@ var z = require('zero-fill')
 			  let upperBound = s.period.upper
 			  cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
 			  cols.push(' ')
+        cols.push(z(8, n(s.period.ema).format('0.00000000').substring(0,10), ' ').blue)
+        cols.push(' ')
 			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
 		  } else {
 			  cols.push('.......... PR > '+s.in_preroll)
