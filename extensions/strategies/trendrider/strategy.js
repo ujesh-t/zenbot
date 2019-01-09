@@ -51,11 +51,11 @@ var z = require('zero-fill')
 		  if(s.period.lower && s.period.upper) {
 			  let lowerBound = s.period.lower
 			  let upperBound = s.period.upper
-			  cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
+			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').orange)
 			  cols.push(' ')
-        cols.push(z(8, n(s.period.ema).format('0.00000000').substring(0,10), ' ').blue)
+        cols.push(z(8, n(s.period.ema).format('0.00000000').substring(0,10), ' ').white)
         cols.push(' ')
-			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
+			  cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
 		  } else {
 			  cols.push('.......... PR > '+s.in_preroll)
 		  }
