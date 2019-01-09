@@ -16,7 +16,7 @@ var z = require('zero-fill')
 	  calculate: function(s){
       
       ema(s, 'ema', s.options.bollinger_period)
-			stddev(s, 'stddev', s.options.bollinger_period, s.close)
+			stddev(s, 'stddev', s.options.bollinger_period, 'close')
       
 		  if(!s.in_preroll){
 			  s.period.upper = (s.period.ema) + (s.options.standard_deviation * s.period.stddev)
