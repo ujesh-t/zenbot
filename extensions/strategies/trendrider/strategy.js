@@ -14,9 +14,11 @@ var z = require('zero-fill')
 	  },
 	  
 	  calculate: function(s){
+      
+      ema(s, 'ema', s.options.bollinger_period)
+			stddev(s, 'stddev', s.options.bollinger_period, s.close)
+      
 		  if(!s.in_preroll){
-			  ema(s, 'ema', s.options.bollinger_period)
-			  stddev(s, 'stddev', s.options.bollinger_period, 'ema')
 			  s.period.upper = (s.period.ema) + (s.options.standard_deviation * s.period.stddev)
 			  s.period.lower = (s.period.ema) - (s.options.standard_deviation * s.period.stddev)
 			  
@@ -50,7 +52,7 @@ var z = require('zero-fill')
 			  cols.push(' ')
 			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
 		  } else {
-			  cols.push('..........'+s.in_preroll)
+			  cols.push('..........')
 		  }
 		  return cols
 	  },
