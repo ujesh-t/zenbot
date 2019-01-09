@@ -1,3 +1,7 @@
+// @Author: Ujesh Lal
+// Strat Name: TrendRider
+// Date: 09-Jan-2019 (Happy Birthday BitCoin)
+
 var z = require('zero-fill')
   , n = require('numbro')
   , ema = require('../../../lib/ema')
