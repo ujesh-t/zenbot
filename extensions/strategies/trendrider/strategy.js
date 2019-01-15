@@ -53,7 +53,7 @@ var z = require('zero-fill')
 			  let upperBound = s.period.upper
 			  cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
 			  cols.push(' ')
-        cols.push(z(8, n(s.period.ema).format('0.00000000').substring(0,10), ' ').white)
+        cols.push(z(6, n(s.period.ema).format('0.00000000').substring(0,8), ' ').white)
         cols.push(' ')
 			  cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').green)
 		  } else {
