@@ -3,12 +3,12 @@ const ccxt = require ('ccxt')
 const c = require('../../../conf')
 const n = require('numbro')
 
-const hitbtc = new ccxt.hitbtc2 ({
-  'apiKey': c.hitbtc.key,
-  'secret': c.hitbtc.secret,
+const crex24 = new ccxt.crex24 ({
+  'apiKey': c.crex24.key,
+  'secret': c.crex24.secret,
 })
 
-hitbtc.fetch_markets()
+crex24.fetch_markets()
   .then(result =>   {
     var products = []
     result.forEach(function (product) {
