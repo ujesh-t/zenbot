@@ -57,7 +57,7 @@ var z = require('zero-fill')
         cols.push(' ')
 			  cols.push(z(4, n(lowerBound).format('0.00000000').substring(5,10), ' ').green)
 		  } else {
-			  cols.push('..........' + s.lookback.length)
+			  cols.push('.......... ' + s.lookback.length)
 		  }
 		  return cols
 	  },
