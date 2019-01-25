@@ -113,29 +113,48 @@ module.exports = function crex24 (conf) {
     getTrades: function (opts, cb) {
       var func_args = [].slice.call(arguments)
       var client = publicClient()
-      {
-        client.fetchTrades(joinProduct(opts.product_id),opts.from)
-          .then(result => {
-            var trades = result.map(function (trade) {
-              return {
-                trade_id: trade.id,
-                time: trade.timestamp,
-                size: parseFloat(trade.amount),
-                price: parseFloat(trade.price),
-                selector: 'crex24.'+opts.product_id,
-                side: trade.side
-              }
-            })
-
-            cb(null, trades)
-          })
-          .catch(function (error) {
-            console.error('An error occurred', error)
-            return retry('getTrades', func_args,error)
-          })
+      var startTime = null
+      var args = {}
+      if (opts.from) {
+        startTime = opts.from
+      } else {
+        startTime = parseInt(opts.to, 10) - 3600000
+        args['endTime'] = opts.to
       }
-    },
 
+      const symbol = joinProduct(opts.product_id)
+      client.fetchTrades(symbol, startTime, undefined, args).then(result => {
+
+        if (result.length === 0 && opts.from) {
+          // client.fetchTrades() only returns trades in an 1 hour interval.
+          // So we use fetchOHLCV() to detect trade appart from more than 1h.
+          // Note: it's done only in forward mode.
+          const time_diff = client.options['timeDifference']
+          if (startTime + time_diff < (new Date()).getTime() - 3600000) {
+            // startTime is older than 1 hour ago.
+            return client.fetchOHLCV(symbol, undefined, startTime)
+              .then(ohlcv => {
+                return ohlcv.length ? client.fetchTrades(symbol, ohlcv[0][0]) : []
+              })
+          }
+        }
+        return result
+      }).then(result => {
+        var trades = result.map(trade => ({
+          trade_id: trade.id,
+          time: trade.timestamp,
+          size: parseFloat(trade.amount),
+          price: parseFloat(trade.price),
+          side: trade.side
+        }))
+        cb(null, trades)
+      }).catch(function (error) {
+        console.error('An error occurred', error)
+        return retry('getTrades', func_args)
+      })
+
+    },
+    
     getBalance: function (opts, cb) {
       var func_args = [].slice.call(arguments)
       var client = authedClient()
