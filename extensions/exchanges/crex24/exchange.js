@@ -130,6 +130,7 @@ module.exports = function crex24 (conf) {
             cb(null, trades)
           })
           .catch(function (error) {
+            console.error('An error occurred', error)
             return retry('getTrades', func_args,error)
           })
       }
@@ -154,6 +155,7 @@ module.exports = function crex24 (conf) {
           cb(null, balance)
         })
         .catch(function (error) {
+          console.error('An error occurred', error)
           return retry('getBalance', func_args,error)
         })
     },
@@ -166,6 +168,7 @@ module.exports = function crex24 (conf) {
           cb(null, { bid: result.bid, ask: result.ask })
         })
         .catch(function (error) {
+          console.error('An error occurred', error)
           return retry('getQuote', func_args,error)
         })
     },
@@ -178,6 +181,7 @@ module.exports = function crex24 (conf) {
           cb(result)
         })
         .catch(function (error) {
+          console.error('An error occurred', error)
           return retry('cancelOrder', func_args,error)
         })
     },
@@ -260,6 +264,7 @@ module.exports = function crex24 (conf) {
        
           return cb(null, order)
         }).catch(function (error) {
+          console.error('An error occurred', error)
           if (error.message.match(/Insufficient funds/)) 
           {
             let order = {
@@ -301,6 +306,7 @@ module.exports = function crex24 (conf) {
 
           return cb(null,r)
         }).catch(function (error) {
+          console.error('An error occurred', error)
           return retry('getOrder', func_args,error)
         }) 
     },
