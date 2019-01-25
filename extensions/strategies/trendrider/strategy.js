@@ -19,7 +19,7 @@ var z = require('zero-fill')
 	  
 	  calculate: function(s){
             
-		  if(!s.in_preroll){
+		  if(!s.in_preroll && s.lookback.lookback > s.options.bollinger_period){
         ema(s, 'ema', s.options.bollinger_period)
 			  stddev(s, 'stddev', s.options.bollinger_period, 'close')
 			  s.period.upper = (s.period.ema) + (s.options.standard_deviation * s.period.stddev)
@@ -57,7 +57,7 @@ var z = require('zero-fill')
         cols.push(' ')
 			  cols.push(z(4, n(lowerBound).format('0.00000000').substring(5,10), ' ').green)
 		  } else {
-			  cols.push('..........')
+			  cols.push('..........' + s.lookback.length)
 		  }
 		  return cols
 	  },
