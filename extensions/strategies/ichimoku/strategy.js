@@ -23,6 +23,7 @@ module.exports = {
 
   onPeriod: function (s, cb) {
     if (s.lookback[s.options.min_periods]) {
+      
       highest(s, 'tenkan_high', s.options.tenkan)
       lowest(s, 'tenkan_low', s.options.tenkan)
       highest(s, 'kijun_high', s.options.kijun)
@@ -35,18 +36,58 @@ module.exports = {
       s.period.senkou_a = ((s.period.tenkan + s.period.kijun) / 2)
       s.period.senkou_b = ((s.period.senkou_high + s.period.senkou_low) / 2)
       s.period.chikou = s.lookback[s.options.chikou - 1].close
+      
+      let currentSenkouA = s.lookback[s.options.chikou - 1].senkou_a
+      let currentSenkouB = s.lookback[s.options.chikou - 1].senkou_b
+      
+      let upperBound = Math.max(currentSenkouA, currentSenkouB)
+      let lowerBound = Math.min(currentSenkouA, currentSenkouB)
 
-      // The below lines cause the bot to buy when the price is above the kumo cloud and sell when the price is inside
-      // or below the kumo cloud. There are many different ways to trade the Ichimoku Cloud and all of them can be
-      // implemented using the indicators above.
-
-      if (s.period.close > Math.max(s.period.senkou_a, s.period.senkou_b)) {
+      /*
+      
+      // Tenkan is Above Kijun and Kumo Breakout Happens
+      if (s.period.tenkan > s.period.kijun && s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
         if (s.trend !== 'up') {
           s.acted_on_trend = false
         }
         s.trend = 'up'
         s.signal = !s.acted_on_trend ? 'buy' : null
       }
+      
+      // Strong TenkenKijun Cross 
+      let prevTenkanBelowKijun = (s.lookback[1].tenkan <= s.lookback[1].kijun)
+      let currentTenkanAboveKijun = (s.period.tenkan > s.period.kijun)
+      let priceAboveKumo = (s.period.close >= upperBound)
+      
+      if(prevTenkanBelowKijun && currentTenkanAboveKijun && priceAboveKumo){
+        if (s.trend !== 'up') {
+          s.acted_on_trend = false
+        }
+        s.trend = 'up'
+        s.signal = !s.acted_on_trend ? 'buy' : null
+      }
+      */
+      
+      // Kumo Breakout
+      if (s.period.close > upperBound && (s.lookback[1].close <= upperBound)) {
+        if (s.trend !== 'up') {
+          s.acted_on_trend = false
+        }
+        s.trend = 'up'
+        s.signal = !s.acted_on_trend ? 'buy' : null
+      }
+      
+      let prevKijunBelowTenkan = (s.lookback[1].kijun <= s.lookback[1].tenkan)
+      if(s.period.kijun > s.period.tenkan && prevKijunBelowTenkan){
+        if (s.trend !== 'down') {
+          s.acted_on_trend = false
+        }
+        s.trend = 'down'
+        s.signal = !s.acted_on_trend ? 'sell' : null
+      }
+      
+      
+      /*
       if (s.period.close < Math.min(s.period.senkou_a, s.period.senkou_b)) {
         if (s.trend !== 'down') {
           s.acted_on_trend = false
@@ -54,12 +95,44 @@ module.exports = {
         s.trend = 'down'
         s.signal = !s.acted_on_trend ? 'sell' : null
       }
+      */
+      
+      
     }
     cb()
   },
 
   onReport: function (s) {
     var cols = []
+    if(s.period.senkou_a && s.period.senkou_b){
+      
+        let currentSenkouA = s.lookback[s.options.chikou - 1].senkou_a
+        let currentSenkouB = s.lookback[s.options.chikou - 1].senkou_b
+       
+        let upperBound = Math.max(currentSenkouA, currentSenkouB)
+        let lowerBound = Math.min(currentSenkouA, currentSenkouB)
+      
+        var color = 'grey'
+        if (s.period.close > upperBound) {
+          color = 'green'
+        }
+        if (s.period.close < lowerBound) {
+          color = 'red'
+        }
+        //cols.push(z(8, n(s.period.close).format('0.00000000'), ' ')[color])
+        if(s.trend === 'down') {
+           cols.push(z(8, n(lowerBound).format('0.00000000').substring(0,10), ' ').red)
+           cols.push(' ')
+           cols.push(z(8, n(upperBound).format('0.00000000').substring(0,10), ' ').red)
+        }
+        if(s.trend === 'up'){
+           cols.push(z(8, n(s.period.tenkan).format('0.00000000').substring(0,10), ' ').green)
+           cols.push(' ')
+           cols.push(z(8, n(s.period.kijun).format('0.00000000').substring(0,10), ' ').green)
+        }
+        
+    }
+    
     return cols
   },
 
