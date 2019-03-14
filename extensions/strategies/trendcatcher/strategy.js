@@ -18,27 +18,43 @@ var z = require('zero-fill')
 	  },
 	  
 	  calculate: function(s){
-       //console.log('LOOKBACK LEN: '+s.lookback.length)
-		  if(!s.in_preroll && s.lookback.length > s.options.bollinger_period){
-        ema(s, 'ema', s.options.bollinger_period)
-			  stddev(s, 'stddev', s.options.bollinger_period, 'close')
-			  s.period.upper = (s.period.ema) + (s.options.standard_deviation * s.period.stddev)
-			  s.period.lower = (s.period.ema) - (s.options.standard_deviation * s.period.stddev)
-			  
+      
+        if(!s.in_preroll && s.lookback.length > s.options.sma_period){            
+            // Calculate EMA and SMA
+            ema(s, 'ema', s.options.ema_period)
+            sma(s, 'sma', s.options.sma_perios)
+            
+            // Calculate HA Candle
+            s.period.ha_close = (s.period.open + s.period.high + s.period. close + s.period.low)/4
+            s.period.ha_open = (s.lookback[1].open + s.lookback[1].close )/2
+            s.period.ha_high = Math.max(s.period.high, s.period.open, s.period.close)
+            s.period.ha_low = Math.min(s.period.low, s.period.open, s.period.close) 
 		  }
 	  },
 	  
 	  onPeriod: function(s, cb){
 		  
 		  if(!s.in_preroll){
-			  if(s.period.open <= s.period.lower && s.period.close >= s.period.lower) {
-				  s.signal = 'buy'
-			  } else if(s.period.open >= s.period.upper && s.period.close <= s.period.upper) {
-				  s.signal = 'sell'
-			  } else {
-				  s.signal = null //hold
-			  }
-			  
+              
+              // UP TREND
+              if(s.period.ema > s.period.sma && s.period.ha_close > s.period.ha_open) {
+                if (s.trend !== 'up') {
+                      s.acted_on_trend = false
+                }
+                s.trend = 'up'
+                s.signal = !s.acted_on_trend ? 'buy' : null
+                  
+              } 
+              
+              // DOWN TREND
+              if(s.period.ha_close < s.period.ha_open) {
+                if (s.trend !== 'down') {
+                      s.acted_on_trend = false
+                }
+                s.trend = 'down'
+                s.signal = !s.acted_on_trend ? 'sell' : null
+              } 
+              
 			  return cb()
 		  }
 		  cb()
@@ -48,14 +64,12 @@ var z = require('zero-fill')
 	  onReport: function(s){
 		  var cols = []
       //console.log(s.period)
-		  if(s.period.lower && s.period.upper) {
-			  let lowerBound = s.period.lower
-			  let upperBound = s.period.upper
-			  cols.push(z(4, n(upperBound).format('0.000000000').substring(5,11), ' ').red)
-			  cols.push(' ')
-        cols.push(z(4, n(s.period.ema).format('0.000000000').substring(5,11), ' ').white)
-        cols.push(' ')
-			  cols.push(z(4, n(lowerBound).format('0.000000000').substring(5,11), ' ').green)
+		  if(s.period.ema && s.period.sma) {
+			  let ha_close = s.period.ha_close
+			  let ha_open = s.period.ha_open
+              cols.push('TREND '+s.trend)
+              cols.push(' ')
+              cols.push(ha_close - ha_open)
 		  } else {
 			  cols.push('.......... ' + s.lookback.length)
 		  }
