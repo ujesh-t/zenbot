@@ -19,10 +19,12 @@ var z = require('zero-fill')
 	  
 	  calculate: function(s){
       
-        if(!s.in_preroll && s.lookback.length > s.options.sma_period){            
+         ema(s, 'ema', s.options.ema_period)
+         sma(s, 'sma', s.options.sma_perios)
+      
+        if(!s.in_preroll && s.lookback.length > 1){            
             // Calculate EMA and SMA
-            ema(s, 'ema', s.options.ema_period)
-            sma(s, 'sma', s.options.sma_perios)
+     
             
             // Calculate HA Candle
             s.period.ha_close = (s.period.open + s.period.high + s.period. close + s.period.low)/4
@@ -64,7 +66,7 @@ var z = require('zero-fill')
 	  onReport: function(s){
 		  var cols = []
       //console.log(s.period)
-		  if(s.period.ema && s.period.sma) {
+		  if(!s.in_preroll) {
 			  let ha_close = s.period.ha_close
 			  let ha_open = s.period.ha_open
               cols.push('TREND '+s.trend)
