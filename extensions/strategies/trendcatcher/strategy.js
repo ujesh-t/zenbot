@@ -69,9 +69,10 @@ var z = require('zero-fill')
 		  if(!s.in_preroll) {
 			  let ha_close = s.period.ha_close
 			  let ha_open = s.period.ha_open
+        let diff_ha = ha_close - ha_open
               cols.push('TREND '+s.trend)
               cols.push(' ')
-              cols.push(''+(ha_close - ha_open))
+              cols.push(''+diff_ha)
 		  } else {
 			  cols.push('.......... ' + s.lookback.length)
 		  }
