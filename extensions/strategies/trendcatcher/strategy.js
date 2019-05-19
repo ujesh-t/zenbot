@@ -71,7 +71,7 @@ var z = require('zero-fill')
 			  let ha_open = s.period.ha_open
               cols.push('TREND '+s.trend)
               cols.push(' ')
-              cols.push(' ')
+              cols.push(''+(ha_close - ha_open))
 		  } else {
 			  cols.push('.......... ' + s.lookback.length)
 		  }
