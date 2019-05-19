@@ -72,7 +72,7 @@ var z = require('zero-fill')
         let diff_ha = ha_close - ha_open
               cols.push('TREND '+s.trend)
               cols.push(' ')
-              cols.push(''+diff_ha)
+              cols.push(z(8, n(ha_close).format('+00.0000'), ' '))
 		  } else {
 			  cols.push('.......... ' + s.lookback.length)
 		  }
