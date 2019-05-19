@@ -75,7 +75,7 @@ var z = require('zero-fill')
         if(diff_ha < 0) color = 'red'
               cols.push('TREND '+s.trend)
               cols.push(' ')
-              cols.push(z(8, n(diff_ha).format('+0.00000'), ' ')[color])
+              cols.push(z(8, n(diff_ha).format('+0.00 '), ' ')[color])
 		  } else {
 			  cols.push('.......... ' + s.lookback.length)
 		  }
