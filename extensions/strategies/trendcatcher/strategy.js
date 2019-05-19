@@ -20,7 +20,7 @@ var z = require('zero-fill')
 	  calculate: function(s){
       
          ema(s, 'ema', s.options.ema_period)
-         sma(s, 'sma', s.options.sma_perios)
+         sma(s, 'sma', s.options.sma_period)
       
         if(!s.in_preroll && s.lookback.length > 1){            
             // Calculate EMA and SMA
