@@ -77,10 +77,7 @@ var z = require('zero-fill')
         if(diff_ha < 0) color_ha = 'red'
         if(diff_ma > 0) color_ma = 'green'
         if(diff_ma < 0) color_ma = 'red'
-        
-              cols.push(z(8, n(s.period.ema)))
-              cols.push(' ')
-              cols.push(z(8, n(s.period.sma)))
+              cols.push('TREND')
               cols.push(' ')
               cols.push(z(8, n(diff_ma).format('0.00'), ' ')[color_ma])
               cols.push(' ')
