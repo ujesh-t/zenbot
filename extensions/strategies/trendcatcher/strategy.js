@@ -65,17 +65,24 @@ var z = require('zero-fill')
 	  
 	  onReport: function(s){
 		  var cols = []
-      var color = 'grey'
+      var color_ha = 'grey'
+      var color_ma = 'grey'
       //console.log(s.period)
 		  if(!s.in_preroll) {
 			  let ha_close = s.period.ha_close
 			  let ha_open = s.period.ha_open
-        let diff_ha = (ha_close - ha_open)/(ha_open) * 100
-        if(diff_ha > 0) color = 'green'
-        if(diff_ha < 0) color = 'red'
+        let diff_ha = ((ha_close - ha_open)/ha_open) * 100
+        let diff_ma = ((s.period.ema - s.period.sma) / s.period.ema) * 100
+        if(diff_ha > 0) color_ha = 'green'
+        if(diff_ha < 0) color_ha = 'red'
+        if(diff_ma > 0) color_ma = 'green'
+        if(diff_ma < 0) color_ma = 'red'
+        
               cols.push('TREND '+s.trend)
               cols.push(' ')
-              cols.push(z(8, n(diff_ha).format('0.00 '), ' ')[color])
+              cols.push(z(8, n(diff_ma).format('0.00 '), ' ')[color_ma])
+              cols.push(' ')
+              cols.push(z(8, n(diff_ha).format('0.00 '), ' ')[color_ha])
 		  } else {
 			  cols.push('.......... ' + s.lookback.length)
 		  }
